@@ -1,0 +1,25 @@
+{
+    "name": "tsco/gap-bot-api",
+    "description": "Gap Bot PHP API",
+    "license": "MIT",
+    "keywords": [
+        "Gap",
+        "Gap-API",
+        "Gap-Bot-API",
+        "Gap-Bot-PHP"
+    ],
+    "support": {
+        "issues": "https://github.com/tsco/Gap-Bot-API/issues",
+        "wiki": "https://github.com/tsco/Gap-Bot-API/wiki",
+        "source": "https://github.com/tsco/Gap-Bot-API"
+    },
+    "autoload": {
+        "classmap": [
+            "src/"
+        ]
+    },
+    "require": {
+        "php": ">=5.5",
+        "ext-curl": "*"
+    }
+}
