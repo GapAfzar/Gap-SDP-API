@@ -31,7 +31,7 @@ class GapBot
     if (isset($action) && in_array($action, $actions))
     {
       $params = compact('chat_id');
-      return $this->sendRequest($action, $params);
+      return $this->sendRequest($action, $params, 'sendAction');
     }
 
     throw new GapException('Invalid Action! Accepted value: '.implode(', ', $actions));
@@ -184,12 +184,12 @@ class GapBot
     return $this->sendRequest('voice', $params);
   }
 
-  private function sendRequest($method, $params)
+  private function sendRequest($msgType, $params, $method = 'sendMessage')
   {
-    $params['type'] = $method;
+    $params['type'] = $msgType;
 
     $curl = curl_init();
-    curl_setopt($curl, CURLOPT_URL, $this->baseURL . "sendMessage");
+    curl_setopt($curl, CURLOPT_URL, $this->baseURL . $method);
     curl_setopt($curl, CURLOPT_HEADER, false);
     curl_setopt($curl, CURLOPT_POST, 1);
     curl_setopt($curl, CURLOPT_POSTFIELDS, http_build_query($params));
