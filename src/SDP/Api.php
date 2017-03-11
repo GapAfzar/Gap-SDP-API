@@ -1,18 +1,17 @@
 <?php
 
-require 'Exception.php';
+namespace Gap\SDP;
 
-class GapBot
-{
+class Api {
+
   private $baseURL = 'https://api.gap.im/';
 
   protected $token;
 
-  public function __construct($token)
-  {
+  public function __construct($token) {
     $this->token = $token;
     if (is_null($this->token))
-      throw new GapException('Required "token" key not supplied');
+      throw new \Exception('Required "token" key not supplied');
   }
   
   /**
@@ -23,8 +22,7 @@ class GapBot
    *
    * @return Array
    */
-  public function sendAction($chat_id, $action)
-  {
+  public function sendAction($chat_id, $action) {
     $actions = array(
       'typing',
     );
@@ -34,7 +32,7 @@ class GapBot
       return $this->sendRequest($action, $params, 'sendAction');
     }
 
-    throw new GapException('Invalid Action! Accepted value: '.implode(', ', $actions));
+    throw new \Exception('Invalid Action! Accepted value: '.implode(', ', $actions));
   }
 
   /**
@@ -45,8 +43,7 @@ class GapBot
    *
    * @return Array
    */
-  public function sendText($chat_id, $data)
-  {
+  public function sendText($chat_id, $data) {
     $params = compact('chat_id', 'data');
 
     return $this->sendRequest('text', $params);
@@ -62,8 +59,7 @@ class GapBot
    *
    * @return Array
    */
-  public function sendLocation($chat_id, $lat, $long, $desc)
-  {
+  public function sendLocation($chat_id, $lat, $long, $desc) {
     $data = json_encode(compact('lat', 'long', 'desc'));
     $params = compact('chat_id', 'data');
 
@@ -79,8 +75,7 @@ class GapBot
    *
    * @return Array
    */
-  public function sendContact($chat_id, $phone, $name)
-  {
+  public function sendContact($chat_id, $phone, $name) {
     $data = json_encode(compact('phone', 'name'));
     $params = compact('chat_id', 'data');
 
@@ -96,10 +91,9 @@ class GapBot
    *
    * @return Array
    */
-  public function sendImage($chat_id, $image, $desc = null)
-  {
+  public function sendImage($chat_id, $image, $desc = null) {
     if (!is_dir($image)) {
-      throw new GapException("Image path is invalid");
+      throw new \Exception("Image path is invalid");
     }
     $data = $this->uploadFile('image', $image);
     $params = compact('chat_id', 'data');
@@ -115,10 +109,9 @@ class GapBot
    *
    * @return Array
    */
-  public function sendAudio($chat_id, $audio)
-  {
+  public function sendAudio($chat_id, $audio) {
     if (!is_dir($audio)) {
-      throw new GapException("Audio path is invalid");
+      throw new \Exception("Audio path is invalid");
     }
     $data = $this->uploadFile('audio', $audio);
     $params = compact('chat_id', 'data');
@@ -134,10 +127,9 @@ class GapBot
    *
    * @return Array
    */
-  public function sendSticker($chat_id, $sticker)
-  {
+  public function sendSticker($chat_id, $sticker) {
     if (!is_dir($sticker)) {
-      throw new GapException("Sticker path is invalid");
+      throw new \Exception("Sticker path is invalid");
     }
     $data = $this->uploadFile('sticker', $sticker);
     $params = compact('chat_id', 'data');
@@ -154,10 +146,9 @@ class GapBot
    *
    * @return Array
    */
-  public function sendVideo($chat_id, $video, $caption = null)
-  {
+  public function sendVideo($chat_id, $video, $caption = null) {
     if (!is_dir($video)) {
-      throw new GapException("Video path is invalid");
+      throw new \Exception("Video path is invalid");
     }
     $data = $this->uploadFile('video', $video);
     $params = compact('chat_id', 'data');
@@ -173,10 +164,9 @@ class GapBot
    *
    * @return Array
    */
-  public function sendVoice($chat_id, $voice)
-  {
+  public function sendVoice($chat_id, $voice) {
     if (!is_dir($voice)) {
-      throw new GapException("Voice path is invalid");
+      throw new \Exception("Voice path is invalid");
     }
     $data = $this->uploadFile('voice', $voice);
     $params = compact('chat_id', 'data');
@@ -184,8 +174,7 @@ class GapBot
     return $this->sendRequest('voice', $params);
   }
 
-  private function sendRequest($msgType, $params, $method = 'sendMessage')
-  {
+  private function sendRequest($msgType, $params, $method = 'sendMessage') {
     $params['type'] = $msgType;
 
     $curl = curl_init();
@@ -203,17 +192,16 @@ class GapBot
     if ($httpcode != 200) {
       if ($curl_result) {
         $curl_result = json_decode($curl_result, true);
-        throw new GapException($curl_result['error']);
+        throw new \Exception($curl_result['error']);
       }
-      throw new GapException('an error was encountered');
+      throw new \Exception('an error was encountered');
     }
     
     return true;
   }
 
-  private function uploadFile($method, $data)
-  {
-    throw new GapException('Upload not supported yet');
+  private function uploadFile($method, $data) {
+    throw new \Exception('Upload not supported yet');
   }
 
 }

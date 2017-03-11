@@ -6,7 +6,8 @@
         "Gap",
         "Gap-API",
         "Gap-Bot-API",
-        "Gap-Bot-PHP"
+        "Gap-Bot-PHP",
+	"Gap-SDP-API"
     ],
     "support": {
         "issues": "https://github.com/tsco/Gap-Bot-API/issues",
@@ -14,9 +15,9 @@
         "source": "https://github.com/tsco/Gap-Bot-API"
     },
     "autoload": {
-        "classmap": [
-            "src/"
-        ]
+        "psr-4": {
+            "Gap\\": "src/"
+        }
     },
     "require": {
         "php": ">=5.5",

@@ -1,12 +1,14 @@
 <?php
 
-require '../src/Gap.php';
+require dirname(__FILE__) . '/../vendor/autoload.php';
 
-$token = "";  // HERE YOUR TOKEN
+use Gap\SDP\Api;
 
-$gm = new GapBot($token);
+$token = {HERE YOUR TOKEN};
 
-$chat_id = null;
+$gm = new Api($token);
+
+$chat_id = {HERE CHAT ID};
 
 // send typing
 $gm->sendAction($chat_id, 'typing');
