@@ -43,8 +43,8 @@ class Api {
    *
    * @return Array
    */
-  public function sendText($chat_id, $data) {
-    $params = compact('chat_id', 'data');
+  public function sendText($chat_id, $data, $reply_keyboard) {
+    $params = compact('chat_id', 'data', 'reply_keyboard');
 
     return $this->sendRequest('text', $params);
   }
@@ -59,9 +59,9 @@ class Api {
    *
    * @return Array
    */
-  public function sendLocation($chat_id, $lat, $long, $desc) {
+  public function sendLocation($chat_id, $lat, $long, $desc, $reply_keyboard) {
     $data = json_encode(compact('lat', 'long', 'desc'));
-    $params = compact('chat_id', 'data');
+    $params = compact('chat_id', 'data', 'reply_keyboard');
 
     return $this->sendRequest('location', $params);
   }
@@ -75,9 +75,9 @@ class Api {
    *
    * @return Array
    */
-  public function sendContact($chat_id, $phone, $name) {
+  public function sendContact($chat_id, $phone, $name, $reply_keyboard) {
     $data = json_encode(compact('phone', 'name'));
-    $params = compact('chat_id', 'data');
+    $params = compact('chat_id', 'data', 'reply_keyboard');
 
     return $this->sendRequest('contact', $params);
   }
@@ -91,12 +91,12 @@ class Api {
    *
    * @return Array
    */
-  public function sendImage($chat_id, $image, $desc = null) {
+  public function sendImage($chat_id, $image, $desc, $reply_keyboard) {
     if (!is_dir($image)) {
       throw new \Exception("Image path is invalid");
     }
     $data = $this->uploadFile('image', $image);
-    $params = compact('chat_id', 'data');
+    $params = compact('chat_id', 'data', 'reply_keyboard');
 
     return $this->sendRequest('image', $params);
   }
@@ -109,12 +109,12 @@ class Api {
    *
    * @return Array
    */
-  public function sendAudio($chat_id, $audio) {
+  public function sendAudio($chat_id, $audio, $desc, $reply_keyboard) {
     if (!is_dir($audio)) {
       throw new \Exception("Audio path is invalid");
     }
     $data = $this->uploadFile('audio', $audio);
-    $params = compact('chat_id', 'data');
+    $params = compact('chat_id', 'data', 'reply_keyboard');
 
     return $this->sendRequest('audio', $params);
   }
@@ -146,12 +146,12 @@ class Api {
    *
    * @return Array
    */
-  public function sendVideo($chat_id, $video, $caption = null) {
+  public function sendVideo($chat_id, $video, $caption, $reply_keyboard) {
     if (!is_dir($video)) {
       throw new \Exception("Video path is invalid");
     }
     $data = $this->uploadFile('video', $video);
-    $params = compact('chat_id', 'data');
+    $params = compact('chat_id', 'data', 'reply_keyboard');
 
     return $this->sendRequest('video', $params);
   }
@@ -164,14 +164,31 @@ class Api {
    *
    * @return Array
    */
-  public function sendVoice($chat_id, $voice) {
+  public function sendVoice($chat_id, $voice, $desc, $reply_keyboard) {
     if (!is_dir($voice)) {
       throw new \Exception("Voice path is invalid");
     }
     $data = $this->uploadFile('voice', $voice);
-    $params = compact('chat_id', 'data');
+    $params = compact('chat_id', 'data', 'reply_keyboard');
 
     return $this->sendRequest('voice', $params);
+  }
+  
+  /**
+   * Reply keyboard.
+   *
+   * @param array        $keyboard
+   * @param bool         $once
+   * @param bool         $selective
+   *
+   * @return String
+   */
+  public function replyKeyboard($keyboard, $once = true, $selective = false) {
+    if (!is_array($keyboard)) {
+      throw new \Exception("keyboard must be array");
+    }
+    $replyKeyboard = compact('keyboard', 'once', 'selective');
+    return json_encode($replyKeyboard);
   }
 
   private function sendRequest($msgType, $params, $method = 'sendMessage') {
