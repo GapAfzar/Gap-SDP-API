@@ -26,8 +26,7 @@ class Api {
     $actions = array(
       'typing',
     );
-    if (isset($action) && in_array($action, $actions))
-    {
+    if (in_array($action, $actions)) {
       $params = compact('chat_id');
       return $this->sendRequest($action, $params, 'sendAction');
     }
@@ -43,8 +42,11 @@ class Api {
    *
    * @return Array
    */
-  public function sendText($chat_id, $data, $reply_keyboard) {
-    $params = compact('chat_id', 'data', 'reply_keyboard');
+  public function sendText($chat_id, $data, $reply_keyboard = null) {
+    $params = compact('chat_id', 'data');
+    if ($reply_keyboard) {
+      $params['reply_keyboard'] = $reply_keyboard;
+    }
 
     return $this->sendRequest('text', $params);
   }
@@ -59,9 +61,12 @@ class Api {
    *
    * @return Array
    */
-  public function sendLocation($chat_id, $lat, $long, $desc, $reply_keyboard) {
+  public function sendLocation($chat_id, $lat, $long, $desc = '', $reply_keyboard = null) {
     $data = json_encode(compact('lat', 'long', 'desc'));
-    $params = compact('chat_id', 'data', 'reply_keyboard');
+    $params = compact('chat_id', 'data');
+    if ($reply_keyboard) {
+      $params['reply_keyboard'] = $reply_keyboard;
+    }
 
     return $this->sendRequest('location', $params);
   }
@@ -75,9 +80,12 @@ class Api {
    *
    * @return Array
    */
-  public function sendContact($chat_id, $phone, $name, $reply_keyboard) {
+  public function sendContact($chat_id, $phone, $name, $reply_keyboard = null) {
     $data = json_encode(compact('phone', 'name'));
-    $params = compact('chat_id', 'data', 'reply_keyboard');
+    $params = compact('chat_id', 'data');
+    if ($reply_keyboard) {
+      $params['reply_keyboard'] = $reply_keyboard;
+    }
 
     return $this->sendRequest('contact', $params);
   }
@@ -91,12 +99,15 @@ class Api {
    *
    * @return Array
    */
-  public function sendImage($chat_id, $image, $desc, $reply_keyboard) {
+  public function sendImage($chat_id, $image, $desc = '', $reply_keyboard = null) {
     if (!is_dir($image)) {
       throw new \Exception("Image path is invalid");
     }
-    $data = $this->uploadFile('image', $image);
-    $params = compact('chat_id', 'data', 'reply_keyboard');
+    $data = $this->uploadFile('image', $image, $desc);
+    $params = compact('chat_id', 'data');
+    if ($reply_keyboard) {
+      $params['reply_keyboard'] = $reply_keyboard;
+    }
 
     return $this->sendRequest('image', $params);
   }
@@ -106,35 +117,21 @@ class Api {
    *
    * @param int             $chat_id
    * @param string          $audio
+   * @param string          $description
    *
    * @return Array
    */
-  public function sendAudio($chat_id, $audio, $desc, $reply_keyboard) {
+  public function sendAudio($chat_id, $audio, $desc = '', $reply_keyboard = null) {
     if (!is_dir($audio)) {
       throw new \Exception("Audio path is invalid");
     }
-    $data = $this->uploadFile('audio', $audio);
-    $params = compact('chat_id', 'data', 'reply_keyboard');
+    $data = $this->uploadFile('audio', $audio, $desc);
+    $params = compact('chat_id', 'data');
+    if ($reply_keyboard) {
+      $params['reply_keyboard'] = $reply_keyboard;
+    }
 
     return $this->sendRequest('audio', $params);
-  }
-
-  /**
-   * Send Sticker.
-   *
-   * @param int            $chat_id
-   * @param string         $sticker
-   *
-   * @return Array
-   */
-  public function sendSticker($chat_id, $sticker) {
-    if (!is_dir($sticker)) {
-      throw new \Exception("Sticker path is invalid");
-    }
-    $data = $this->uploadFile('sticker', $sticker);
-    $params = compact('chat_id', 'data');
-
-    return $this->sendRequest('sticker', $params);
   }
 
   /**
@@ -142,16 +139,19 @@ class Api {
    *
    * @param int             $chat_id
    * @param string          $video
-   * @param string          $caption
+   * @param string          $description
    *
    * @return Array
    */
-  public function sendVideo($chat_id, $video, $caption, $reply_keyboard) {
+  public function sendVideo($chat_id, $video, $desc = '', $reply_keyboard = null) {
     if (!is_dir($video)) {
       throw new \Exception("Video path is invalid");
     }
-    $data = $this->uploadFile('video', $video);
-    $params = compact('chat_id', 'data', 'reply_keyboard');
+    $data = $this->uploadFile('video', $video, $desc);
+    $params = compact('chat_id', 'data');
+    if ($reply_keyboard) {
+      $params['reply_keyboard'] = $reply_keyboard;
+    }
 
     return $this->sendRequest('video', $params);
   }
@@ -161,15 +161,19 @@ class Api {
    *
    * @param int             $chat_id
    * @param string          $voice
+   * @param string          $description
    *
    * @return Array
    */
-  public function sendVoice($chat_id, $voice, $desc, $reply_keyboard) {
+  public function sendVoice($chat_id, $voice, $desc = '', $reply_keyboard = null) {
     if (!is_dir($voice)) {
       throw new \Exception("Voice path is invalid");
     }
-    $data = $this->uploadFile('voice', $voice);
-    $params = compact('chat_id', 'data', 'reply_keyboard');
+    $data = $this->uploadFile('voice', $voice, $desc);
+    $params = compact('chat_id', 'data');
+    if ($reply_keyboard) {
+      $params['reply_keyboard'] = $reply_keyboard;
+    }
 
     return $this->sendRequest('voice', $params);
   }
