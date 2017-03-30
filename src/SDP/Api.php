@@ -100,7 +100,7 @@ class Api {
    * @return Array
    */
   public function sendImage($chat_id, $image, $desc = '', $reply_keyboard = null) {
-    if (!is_dir($image)) {
+    if (!is_file($image)) {
       throw new \Exception("Image path is invalid");
     }
     $data = $this->uploadFile('image', $image, $desc);
@@ -122,7 +122,7 @@ class Api {
    * @return Array
    */
   public function sendAudio($chat_id, $audio, $desc = '', $reply_keyboard = null) {
-    if (!is_dir($audio)) {
+    if (!is_file($audio)) {
       throw new \Exception("Audio path is invalid");
     }
     $data = $this->uploadFile('audio', $audio, $desc);
@@ -144,7 +144,7 @@ class Api {
    * @return Array
    */
   public function sendVideo($chat_id, $video, $desc = '', $reply_keyboard = null) {
-    if (!is_dir($video)) {
+    if (!is_file($video)) {
       throw new \Exception("Video path is invalid");
     }
     $data = $this->uploadFile('video', $video, $desc);
@@ -154,6 +154,28 @@ class Api {
     }
 
     return $this->sendRequest('video', $params);
+  }
+  
+  /**
+   * Send File.
+   *
+   * @param int             $chat_id
+   * @param string          $file
+   * @param string          $description
+   *
+   * @return Array
+   */
+  public function sendFile($chat_id, $file, $desc = '', $reply_keyboard = null) {
+    if (!is_file($file)) {
+      throw new \Exception("File path is invalid");
+    }
+    $data = $this->uploadFile('file', $file, $desc);
+    $params = compact('chat_id', 'data');
+    if ($reply_keyboard) {
+      $params['reply_keyboard'] = $reply_keyboard;
+    }
+
+    return $this->sendRequest('file', $params);
   }
 
   /**
@@ -166,7 +188,7 @@ class Api {
    * @return Array
    */
   public function sendVoice($chat_id, $voice, $desc = '', $reply_keyboard = null) {
-    if (!is_dir($voice)) {
+    if (!is_file($voice)) {
       throw new \Exception("Voice path is invalid");
     }
     $data = $this->uploadFile('voice', $voice, $desc);
@@ -220,9 +242,19 @@ class Api {
     
     return true;
   }
+  
+  private function uploadFile($type, $file, $desc) {
+    $finfo = finfo_open(FILEINFO_MIME_TYPE);
+    $mime_type = finfo_file($finfo, $file);
+    $data[$type] = new \CurlFile($file, $mime_type, basename($file));
 
-  private function uploadFile($method, $data) {
-    throw new \Exception('Upload not supported yet');
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $this->baseURL . 'upload');
+    curl_setopt($ch, CURLOPT_POST, 1);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    $response = json_decode(curl_exec($ch), true);
+    $response['desc'] = $desc;
+    return json_encode($response);
   }
-
 }
