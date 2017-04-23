@@ -10,10 +10,11 @@ class Api {
 
   public function __construct($token) {
     $this->token = $token;
-    if (is_null($this->token))
+    if (is_null($this->token)) {
       throw new \Exception('Required "token" key not supplied');
+    }
   }
-  
+
   /**
    * Send Action.
    *
@@ -50,7 +51,7 @@ class Api {
 
     return $this->sendRequest('text', $params);
   }
-  
+
   /**
    * Send Location.
    *
@@ -100,10 +101,15 @@ class Api {
    * @return Array
    */
   public function sendImage($chat_id, $image, $desc = '', $reply_keyboard = null) {
-    if (!is_file($image)) {
-      throw new \Exception("Image path is invalid");
+    if (!json_decode($image)) {
+      if (!is_file($image)) {
+        throw new \Exception("Image path is invalid");
+      }
+      $image = $this->uploadFile('image', $image);
     }
-    $data = $this->uploadFile('image', $image, $desc);
+
+    $data = $this->pushDescription($image, $desc);
+
     $params = compact('chat_id', 'data');
     if ($reply_keyboard) {
       $params['reply_keyboard'] = $reply_keyboard;
@@ -122,10 +128,15 @@ class Api {
    * @return Array
    */
   public function sendAudio($chat_id, $audio, $desc = '', $reply_keyboard = null) {
-    if (!is_file($audio)) {
-      throw new \Exception("Audio path is invalid");
+    if (!json_decode($audio)) {
+      if (!is_file($audio)) {
+        throw new \Exception("Audio path is invalid");
+      }
+      $audio = $this->uploadFile('audio', $audio);
     }
-    $data = $this->uploadFile('audio', $audio, $desc);
+
+    $data = $this->pushDescription($audio, $desc);
+
     $params = compact('chat_id', 'data');
     if ($reply_keyboard) {
       $params['reply_keyboard'] = $reply_keyboard;
@@ -144,10 +155,15 @@ class Api {
    * @return Array
    */
   public function sendVideo($chat_id, $video, $desc = '', $reply_keyboard = null) {
-    if (!is_file($video)) {
-      throw new \Exception("Video path is invalid");
+    if (!json_decode($video)) {
+      if (!is_file($video)) {
+        throw new \Exception("Video path is invalid");
+      }
+      $video = $this->uploadFile('video', $video);
     }
-    $data = $this->uploadFile('video', $video, $desc);
+
+    $data = $this->pushDescription($video, $desc);
+
     $params = compact('chat_id', 'data');
     if ($reply_keyboard) {
       $params['reply_keyboard'] = $reply_keyboard;
@@ -155,7 +171,7 @@ class Api {
 
     return $this->sendRequest('video', $params);
   }
-  
+
   /**
    * Send File.
    *
@@ -166,10 +182,15 @@ class Api {
    * @return Array
    */
   public function sendFile($chat_id, $file, $desc = '', $reply_keyboard = null) {
-    if (!is_file($file)) {
-      throw new \Exception("File path is invalid");
+    if (!json_decode($file)) {
+      if (!is_file($file)) {
+        throw new \Exception("File path is invalid");
+      }
+      $file = $this->uploadFile('file', $file);
     }
-    $data = $this->uploadFile('file', $file, $desc);
+
+    $data = $this->pushDescription($file, $desc);
+
     $params = compact('chat_id', 'data');
     if ($reply_keyboard) {
       $params['reply_keyboard'] = $reply_keyboard;
@@ -188,10 +209,15 @@ class Api {
    * @return Array
    */
   public function sendVoice($chat_id, $voice, $desc = '', $reply_keyboard = null) {
-    if (!is_file($voice)) {
-      throw new \Exception("Voice path is invalid");
+    if (!json_decode($voice)) {
+      if (!is_file($voice)) {
+        throw new \Exception("Voice path is invalid");
+      }
+      $voice = $this->uploadFile('voice', $voice);
     }
-    $data = $this->uploadFile('voice', $voice, $desc);
+
+    $data = $this->pushDescription($voice, $desc);
+
     $params = compact('chat_id', 'data');
     if ($reply_keyboard) {
       $params['reply_keyboard'] = $reply_keyboard;
@@ -199,7 +225,7 @@ class Api {
 
     return $this->sendRequest('voice', $params);
   }
-  
+
   /**
    * Reply keyboard.
    *
@@ -231,7 +257,7 @@ class Api {
     $curl_result = curl_exec($curl);
     $httpcode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
     curl_close($curl);
-    
+
     if ($httpcode != 200) {
       if ($curl_result) {
         $curl_result = json_decode($curl_result, true);
@@ -239,11 +265,11 @@ class Api {
       }
       throw new \Exception('an error was encountered');
     }
-    
+
     return true;
   }
-  
-  private function uploadFile($type, $file, $desc) {
+
+  private function uploadFile($type, $file) {
     $finfo = finfo_open(FILEINFO_MIME_TYPE);
     $mime_type = finfo_file($finfo, $file);
     $data[$type] = new \CurlFile($file, $mime_type, basename($file));
@@ -253,8 +279,15 @@ class Api {
     curl_setopt($ch, CURLOPT_POST, 1);
     curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    $response = json_decode(curl_exec($ch), true);
-    $response['desc'] = $desc;
-    return json_encode($response);
+    return curl_exec($ch);
+  }
+
+  private function pushDescription($storageResult, $desc) {
+    if (empty($desc)) {
+      return $storageResult;
+    }
+    $decoded = json_decode($storageResult, true);
+    $decoded['desc'] = $desc;
+    return json_encode($decoded);
   }
 }
