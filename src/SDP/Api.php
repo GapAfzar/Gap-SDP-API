@@ -267,6 +267,27 @@ class Api {
   }
 
   /**
+   * Edit Message.
+   *
+   * @param int             $chat_id
+   * @param int             $message_id
+   * @param string          $data
+   * @param array           $inline_keyboard
+   *
+   * @return Array
+   */
+  public function editMessage($chat_id, $message_id, $data = null, $inline_keyboard = null) {
+    $params = compact('chat_id', 'message_id', 'data', 'inline_keyboard');
+    if ($inline_keyboard) {
+      if (!is_array($inline_keyboard)) {
+        throw new \Exception("Inline keyboard is invalid");
+      }
+      $params['inline_keyboard'] = json_encode($inline_keyboard);
+    }
+    return $this->sendRequest(null, $params, 'editMessage');
+  }
+
+  /**
    * Reply keyboard.
    *
    * @param array        $keyboard
