@@ -40,13 +40,18 @@ class Api {
    *
    * @param int            $chat_id
    * @param string         $data
+   * @param string         $reply_keyboard
+   * @param array          $inline_keyboard
    *
    * @return Array
    */
-  public function sendText($chat_id, $data, $reply_keyboard = null) {
+  public function sendText($chat_id, $data, $reply_keyboard = null, $inline_keyboard = null) {
     $params = compact('chat_id', 'data');
     if ($reply_keyboard) {
       $params['reply_keyboard'] = $reply_keyboard;
+    }
+    if ($inline_keyboard) {
+      $params['inline_keyboard'] = json_encode($inline_keyboard);
     }
 
     return $this->sendRequest('text', $params);
@@ -59,14 +64,19 @@ class Api {
    * @param float          $latitude
    * @param float          $longitude
    * @param string         $description
+   * @param string         $reply_keyboard
+   * @param array          $inline_keyboard
    *
    * @return Array
    */
-  public function sendLocation($chat_id, $lat, $long, $desc = '', $reply_keyboard = null) {
+  public function sendLocation($chat_id, $lat, $long, $desc = '', $reply_keyboard = null, $inline_keyboard = null) {
     $data = json_encode(compact('lat', 'long', 'desc'));
     $params = compact('chat_id', 'data');
     if ($reply_keyboard) {
       $params['reply_keyboard'] = $reply_keyboard;
+    }
+    if ($inline_keyboard) {
+      $params['inline_keyboard'] = json_encode($inline_keyboard);
     }
 
     return $this->sendRequest('location', $params);
@@ -78,14 +88,19 @@ class Api {
    * @param int            $chat_id
    * @param string         $phone
    * @param string         $name
+   * @param string         $reply_keyboard
+   * @param array          $inline_keyboard
    *
    * @return Array
    */
-  public function sendContact($chat_id, $phone, $name, $reply_keyboard = null) {
+  public function sendContact($chat_id, $phone, $name, $reply_keyboard = null, $inline_keyboard = null) {
     $data = json_encode(compact('phone', 'name'));
     $params = compact('chat_id', 'data');
     if ($reply_keyboard) {
       $params['reply_keyboard'] = $reply_keyboard;
+    }
+    if ($inline_keyboard) {
+      $params['inline_keyboard'] = json_encode($inline_keyboard);
     }
 
     return $this->sendRequest('contact', $params);
@@ -97,10 +112,12 @@ class Api {
    * @param int            $chat_id
    * @param string         $image
    * @param string         $description
+   * @param string         $reply_keyboard
+   * @param array          $inline_keyboard
    *
    * @return Array
    */
-  public function sendImage($chat_id, $image, $desc = '', $reply_keyboard = null) {
+  public function sendImage($chat_id, $image, $desc = '', $reply_keyboard = null, $inline_keyboard = null) {
     if (!json_decode($image)) {
       if (!is_file($image)) {
         throw new \Exception("Image path is invalid");
@@ -114,6 +131,9 @@ class Api {
     if ($reply_keyboard) {
       $params['reply_keyboard'] = $reply_keyboard;
     }
+    if ($inline_keyboard) {
+      $params['inline_keyboard'] = json_encode($inline_keyboard);
+    }
 
     return $this->sendRequest('image', $params);
   }
@@ -124,10 +144,12 @@ class Api {
    * @param int             $chat_id
    * @param string          $audio
    * @param string          $description
+   * @param string          $reply_keyboard
+   * @param array           $inline_keyboard
    *
    * @return Array
    */
-  public function sendAudio($chat_id, $audio, $desc = '', $reply_keyboard = null) {
+  public function sendAudio($chat_id, $audio, $desc = '', $reply_keyboard = null, $inline_keyboard = null) {
     if (!json_decode($audio)) {
       if (!is_file($audio)) {
         throw new \Exception("Audio path is invalid");
@@ -141,6 +163,9 @@ class Api {
     if ($reply_keyboard) {
       $params['reply_keyboard'] = $reply_keyboard;
     }
+    if ($inline_keyboard) {
+      $params['inline_keyboard'] = json_encode($inline_keyboard);
+    }
 
     return $this->sendRequest('audio', $params);
   }
@@ -151,10 +176,12 @@ class Api {
    * @param int             $chat_id
    * @param string          $video
    * @param string          $description
+   * @param string          $reply_keyboard
+   * @param array           $inline_keyboard
    *
    * @return Array
    */
-  public function sendVideo($chat_id, $video, $desc = '', $reply_keyboard = null) {
+  public function sendVideo($chat_id, $video, $desc = '', $reply_keyboard = null, $inline_keyboard = null) {
     if (!json_decode($video)) {
       if (!is_file($video)) {
         throw new \Exception("Video path is invalid");
@@ -168,6 +195,9 @@ class Api {
     if ($reply_keyboard) {
       $params['reply_keyboard'] = $reply_keyboard;
     }
+    if ($inline_keyboard) {
+      $params['inline_keyboard'] = json_encode($inline_keyboard);
+    }
 
     return $this->sendRequest('video', $params);
   }
@@ -178,10 +208,12 @@ class Api {
    * @param int             $chat_id
    * @param string          $file
    * @param string          $description
+   * @param string          $reply_keyboard
+   * @param array           $inline_keyboard
    *
    * @return Array
    */
-  public function sendFile($chat_id, $file, $desc = '', $reply_keyboard = null) {
+  public function sendFile($chat_id, $file, $desc = '', $reply_keyboard = null, $inline_keyboard = null) {
     if (!json_decode($file)) {
       if (!is_file($file)) {
         throw new \Exception("File path is invalid");
@@ -195,6 +227,9 @@ class Api {
     if ($reply_keyboard) {
       $params['reply_keyboard'] = $reply_keyboard;
     }
+    if ($inline_keyboard) {
+      $params['inline_keyboard'] = json_encode($inline_keyboard);
+    }
 
     return $this->sendRequest('file', $params);
   }
@@ -205,10 +240,12 @@ class Api {
    * @param int             $chat_id
    * @param string          $voice
    * @param string          $description
+   * @param string          $reply_keyboard
+   * @param array           $inline_keyboard
    *
    * @return Array
    */
-  public function sendVoice($chat_id, $voice, $desc = '', $reply_keyboard = null) {
+  public function sendVoice($chat_id, $voice, $desc = '', $reply_keyboard = null, $inline_keyboard = null) {
     if (!json_decode($voice)) {
       if (!is_file($voice)) {
         throw new \Exception("Voice path is invalid");
@@ -221,6 +258,9 @@ class Api {
     $params = compact('chat_id', 'data');
     if ($reply_keyboard) {
       $params['reply_keyboard'] = $reply_keyboard;
+    }
+    if ($inline_keyboard) {
+      $params['inline_keyboard'] = json_encode($inline_keyboard);
     }
 
     return $this->sendRequest('voice', $params);
@@ -244,7 +284,9 @@ class Api {
   }
 
   private function sendRequest($msgType, $params, $method = 'sendMessage') {
-    $params['type'] = $msgType;
+    if ($msgType) {
+      $params['type'] = $msgType;
+    }
 
     $curl = curl_init();
     curl_setopt($curl, CURLOPT_URL, $this->baseURL . $method);
