@@ -287,6 +287,18 @@ class Api {
     return $this->sendRequest(null, $params, 'editMessage');
   }
 
+  /**
+   * Delete Message.
+   *
+   * @param int             $chat_id
+   * @param int             $message_id
+   *
+   * @return Array
+   */
+  public function deleteMessage($chat_id, $message_id) {
+    $params = compact('chat_id', 'message_id');
+    return $this->sendRequest(null, $params, 'deleteMessage');
+  }
 
   /**
    * Answer Callback.
