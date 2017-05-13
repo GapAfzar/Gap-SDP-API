@@ -287,6 +287,27 @@ class Api {
     return $this->sendRequest(null, $params, 'editMessage');
   }
 
+
+  /**
+   * Answer Callback.
+   *
+   * @param int             $chat_id
+   * @param int             $callback_id
+   * @param string          $text
+   * @param bool            $show_alert
+   *
+   * @return Array
+   */
+  public function answerCallback($chat_id, $callback_id, $text, $show_alert = false) {
+    $params = compact('chat_id', 'callback_id', 'text', 'show_alert');
+    if ($show_alert) {
+      $params['show_alert'] = 'true';
+    } else {
+      $params['show_alert'] = 'false';
+    }
+    return $this->sendRequest(null, $params, 'answerCallback');
+  }
+
   /**
    * Reply keyboard.
    *
