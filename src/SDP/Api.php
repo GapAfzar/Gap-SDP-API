@@ -321,6 +321,22 @@ class Api {
   }
 
   /**
+   * Send Invoice.
+   *
+   * @param int             $chat_id
+   * @param int             $amount
+   * @param string          $description
+   *
+   * @return string
+   */
+  public function sendInvoice($chat_id, $amount, $description) {
+    $params = compact('chat_id', 'amount', 'description');
+    $result = $this->sendRequest(null, $params, 'invoice');
+    $result = json_decode($result, true);
+    return $result['id'];
+  }
+
+  /**
    * Reply keyboard.
    *
    * @param array        $keyboard
@@ -362,7 +378,7 @@ class Api {
       throw new \Exception('an error was encountered');
     }
 
-    return true;
+    return $curl_result;
   }
 
   private function uploadFile($type, $file, $desc) {
