@@ -2,8 +2,6 @@
 
 A PHP wrapper for the Gap Messenger SDP API.
 
-> [Composer](https://github.com/GapAfzar/Gap-SDP-API#installation) package available.  
-
 ## Requirements
 
 - PHP 5.5 or higher
@@ -17,7 +15,9 @@ You will find everything you need to know to use this API in the [wiki](https://
 ## Installation
 
 ```sh
-$ composer require GapAfzar/gap-sdp-api
+$ git clone git@github.com:GapAfzar/Gap-SDP-API.git
+$ cd Gap-SDP-API/
+$ composer dumpautoload
 ```
 
 ### What is Gap?
