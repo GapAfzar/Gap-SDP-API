@@ -337,6 +337,21 @@ class Api {
   }
 
   /**
+   * Pay Inquery.
+   *
+   * @param int             $chat_id
+   * @param int             $ref_id
+   *
+   * @return string
+   */
+  public function payInquery($chat_id, $ref_id) {
+    $params = compact('chat_id', 'ref_id');
+    $result = $this->sendRequest(null, $params, 'payInquery');
+    $result = json_decode($result, true);
+    return $result['status'] == 'verified';
+  }
+
+  /**
    * Reply keyboard.
    *
    * @param array        $keyboard
