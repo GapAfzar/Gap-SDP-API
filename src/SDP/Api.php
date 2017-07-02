@@ -337,18 +337,37 @@ class Api {
   }
 
   /**
-   * Pay Inquery.
+   * Pay verify.
    *
    * @param int             $chat_id
    * @param int             $ref_id
    *
-   * @return string
+   * @return bool
    */
-  public function payInquery($chat_id, $ref_id) {
+  public function payVerify($chat_id, $ref_id) {
     $params = compact('chat_id', 'ref_id');
-    $result = $this->sendRequest(null, $params, 'payInquery');
+    $result = $this->sendRequest(null, $params, 'payVerify');
     $result = json_decode($result, true);
-    return $result['status'] == 'verified';
+    if (is_array($result)) {
+      return $result['status'] == 'verified';
+    }
+  }
+
+  /**
+   * Pay inquiry.
+   *
+   * @param int             $chat_id
+   * @param int             $ref_id
+   *
+   * @return bool
+   */
+  public function payInquiry($chat_id, $ref_id) {
+    $params = compact('chat_id', 'ref_id');
+    $result = $this->sendRequest(null, $params, 'payInquiry');
+    $result = json_decode($result, true);
+    if (is_array($result)) {
+      return $result['status'] == 'verified';
+    }
   }
 
   /**
