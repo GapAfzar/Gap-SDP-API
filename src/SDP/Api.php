@@ -45,7 +45,7 @@ class Api {
    *
    * @return Array
    */
-  public function sendText($chat_id, $data, $reply_keyboard = null, $inline_keyboard = null) {
+  public function sendText($chat_id, $data, $reply_keyboard = null, $inline_keyboard = null, $form = null) {
     $params = compact('chat_id', 'data');
     if ($reply_keyboard) {
       $params['reply_keyboard'] = $reply_keyboard;
@@ -53,8 +53,12 @@ class Api {
     if ($inline_keyboard) {
       $params['inline_keyboard'] = json_encode($inline_keyboard);
     }
+    if ($form) {
+      $params['form'] = json_encode($form);
+    }
 
-    return $this->sendRequest('text', $params);
+    $message = $this->sendRequest('text', $params);
+    return $message ? json_decode($message, true)['id'] : false;
   }
 
   /**
@@ -69,7 +73,7 @@ class Api {
    *
    * @return Array
    */
-  public function sendLocation($chat_id, $lat, $long, $desc = '', $reply_keyboard = null, $inline_keyboard = null) {
+  public function sendLocation($chat_id, $lat, $long, $desc = '', $reply_keyboard = null, $inline_keyboard = null, $form = null) {
     $data = json_encode(compact('lat', 'long', 'desc'));
     $params = compact('chat_id', 'data');
     if ($reply_keyboard) {
@@ -78,8 +82,12 @@ class Api {
     if ($inline_keyboard) {
       $params['inline_keyboard'] = json_encode($inline_keyboard);
     }
+    if ($form) {
+      $params['form'] = json_encode($form);
+    }
 
-    return $this->sendRequest('location', $params);
+    $message = $this->sendRequest('location', $params);
+    return $message ? json_decode($message, true)['id'] : false;
   }
 
   /**
@@ -93,7 +101,7 @@ class Api {
    *
    * @return Array
    */
-  public function sendContact($chat_id, $phone, $name, $reply_keyboard = null, $inline_keyboard = null) {
+  public function sendContact($chat_id, $phone, $name, $reply_keyboard = null, $inline_keyboard = null, $form = null) {
     $data = json_encode(compact('phone', 'name'));
     $params = compact('chat_id', 'data');
     if ($reply_keyboard) {
@@ -102,8 +110,12 @@ class Api {
     if ($inline_keyboard) {
       $params['inline_keyboard'] = json_encode($inline_keyboard);
     }
+    if ($form) {
+      $params['form'] = json_encode($form);
+    }
 
-    return $this->sendRequest('contact', $params);
+    $message = $this->sendRequest('contact', $params);
+    return $message ? json_decode($message, true)['id'] : false;
   }
 
   /**
@@ -117,7 +129,7 @@ class Api {
    *
    * @return Array
    */
-  public function sendImage($chat_id, $image, $desc = '', $reply_keyboard = null, $inline_keyboard = null) {
+  public function sendImage($chat_id, $image, $desc = '', $reply_keyboard = null, $inline_keyboard = null, $form = null) {
     $msgType = 'image';
     if (!json_decode($image)) {
       if (!is_file($image)) {
@@ -134,8 +146,12 @@ class Api {
     if ($inline_keyboard) {
       $params['inline_keyboard'] = json_encode($inline_keyboard);
     }
+    if ($form) {
+      $params['form'] = json_encode($form);
+    }
 
-    return $this->sendRequest($msgType, $params);
+    $message = $this->sendRequest($msgType, $params);
+    return $message ? json_decode($message, true)['id'] : false;
   }
 
   /**
@@ -149,7 +165,7 @@ class Api {
    *
    * @return Array
    */
-  public function sendAudio($chat_id, $audio, $desc = '', $reply_keyboard = null, $inline_keyboard = null) {
+  public function sendAudio($chat_id, $audio, $desc = '', $reply_keyboard = null, $inline_keyboard = null, $form = null) {
     $msgType = 'audio';
     if (!json_decode($audio)) {
       if (!is_file($audio)) {
@@ -166,8 +182,12 @@ class Api {
     if ($inline_keyboard) {
       $params['inline_keyboard'] = json_encode($inline_keyboard);
     }
+    if ($form) {
+      $params['form'] = json_encode($form);
+    }
 
-    return $this->sendRequest($msgType, $params);
+    $message = $this->sendRequest($msgType, $params);
+    return $message ? json_decode($message, true)['id'] : false;
   }
 
   /**
@@ -181,7 +201,7 @@ class Api {
    *
    * @return Array
    */
-  public function sendVideo($chat_id, $video, $desc = '', $reply_keyboard = null, $inline_keyboard = null) {
+  public function sendVideo($chat_id, $video, $desc = '', $reply_keyboard = null, $inline_keyboard = null, $form = null) {
     $msgType = 'video';
     if (!json_decode($video)) {
       if (!is_file($video)) {
@@ -198,8 +218,12 @@ class Api {
     if ($inline_keyboard) {
       $params['inline_keyboard'] = json_encode($inline_keyboard);
     }
+    if ($form) {
+      $params['form'] = json_encode($form);
+    }
 
-    return $this->sendRequest($msgType, $params);
+    $message = $this->sendRequest($msgType, $params);
+    return $message ? json_decode($message, true)['id'] : false;
   }
 
   /**
@@ -213,7 +237,7 @@ class Api {
    *
    * @return Array
    */
-  public function sendFile($chat_id, $file, $desc = '', $reply_keyboard = null, $inline_keyboard = null) {
+  public function sendFile($chat_id, $file, $desc = '', $reply_keyboard = null, $inline_keyboard = null, $form = null) {
     $msgType = 'file';
     if (!json_decode($file)) {
       if (!is_file($file)) {
@@ -230,8 +254,12 @@ class Api {
     if ($inline_keyboard) {
       $params['inline_keyboard'] = json_encode($inline_keyboard);
     }
+    if ($form) {
+      $params['form'] = json_encode($form);
+    }
 
-    return $this->sendRequest($msgType, $params);
+    $message = $this->sendRequest($msgType, $params);
+    return $message ? json_decode($message, true)['id'] : false;
   }
 
   /**
@@ -245,7 +273,7 @@ class Api {
    *
    * @return Array
    */
-  public function sendVoice($chat_id, $voice, $desc = '', $reply_keyboard = null, $inline_keyboard = null) {
+  public function sendVoice($chat_id, $voice, $desc = '', $reply_keyboard = null, $inline_keyboard = null, $form = null) {
     $msgType = 'voice';
     if (!json_decode($voice)) {
       if (!is_file($voice)) {
@@ -262,8 +290,12 @@ class Api {
     if ($inline_keyboard) {
       $params['inline_keyboard'] = json_encode($inline_keyboard);
     }
+    if ($form) {
+      $params['form'] = json_encode($form);
+    }
 
-    return $this->sendRequest($msgType, $params);
+    $message = $this->sendRequest($msgType, $params);
+    return $message ? json_decode($message, true)['id'] : false;
   }
 
   /**
