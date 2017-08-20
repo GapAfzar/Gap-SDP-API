@@ -403,6 +403,19 @@ class Api {
   }
 
   /**
+   * Request wallet charge.
+   *
+   * @param int             $chat_id
+   * @param int             $ref_id
+   *
+   * @return bool
+   */
+  public function requestWalletCharge($chat_id, $desc = null) {
+    $params = compact('chat_id', 'desc');
+    return $this->sendRequest(null, $params, 'requestWalletCharge');
+  }
+
+  /**
    * Reply keyboard.
    *
    * @param array        $keyboard
