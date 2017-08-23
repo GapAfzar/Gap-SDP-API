@@ -4,7 +4,7 @@ namespace Gap\SDP;
 
 class Api {
 
-  private $baseURL = 'https://api.gap.im/';
+  protected $baseURL = 'https://api.gap.im/';
 
   protected $token;
 
