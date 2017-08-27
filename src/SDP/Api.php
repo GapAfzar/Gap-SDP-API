@@ -8,11 +8,17 @@ class Api {
 
   protected $token;
 
+  protected $lastMessage;
+
   public function __construct($token) {
     $this->token = $token;
     if (is_null($this->token)) {
       throw new \Exception('Required "token" key not supplied');
     }
+  }
+
+  public function getLastMessage() {
+    return $this->lastMessage;
   }
 
   /**
@@ -435,6 +441,10 @@ class Api {
   private function sendRequest($msgType, $params, $method = 'sendMessage') {
     if ($msgType) {
       $params['type'] = $msgType;
+    }
+
+    if ($method == 'sendMessage') {
+      $this->lastMessage = $params;
     }
 
     $curl = curl_init();
