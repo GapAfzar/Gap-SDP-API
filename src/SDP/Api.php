@@ -479,6 +479,7 @@ class Api {
     curl_setopt($ch, CURLOPT_URL, $this->baseURL . 'upload');
     curl_setopt($ch, CURLOPT_POST, 1);
     curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+    curl_setopt($ch, CURLOPT_HTTPHEADER, array('token: ' . $this->token));
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
     $decoded = json_decode(curl_exec($ch), true);
     $decoded['desc'] = $desc;
