@@ -375,6 +375,38 @@ class Api {
   }
 
   /**
+   * Invoice inquiry.
+   *
+   * @param int             $chat_id
+   * @param int             $ref_id (invoiceId)
+   *
+   * @return array
+   */
+  public function invoiceInquiry($chat_id, $ref_id) {
+    $params = compact('chat_id', 'ref_id');
+    $result = $this->sendRequest(null, $params, 'invoice/inquery');
+    $result = json_decode($result, true);
+    if (is_array($result)) {
+      return $result;
+    }
+  }
+
+  /**
+   * Invoice verify.
+   *
+   * @param int             $chat_id
+   * @param int             $ref_id (invoiceId)
+   *
+   * @return array
+   */
+  public function invoiceVerify($chat_id, $ref_id) {
+    $params = compact('chat_id', 'ref_id');
+    $result = $this->sendRequest(null, $params, 'invoice/verify');
+    $result = json_decode($result, true);
+    return is_array($result) && $result['status'] == 'verified';
+  }
+
+  /**
    * Pay verify.
    *
    * @param int             $chat_id
@@ -384,11 +416,9 @@ class Api {
    */
   public function payVerify($chat_id, $ref_id) {
     $params = compact('chat_id', 'ref_id');
-    $result = $this->sendRequest(null, $params, 'payVerify');
+    $result = $this->sendRequest(null, $params, 'payment/verify');
     $result = json_decode($result, true);
-    if (is_array($result)) {
-      return $result['status'] == 'verified';
-    }
+    return is_array($result) && $result['status'] == 'verified';
   }
 
   /**
@@ -397,14 +427,14 @@ class Api {
    * @param int             $chat_id
    * @param int             $ref_id
    *
-   * @return bool
+   * @return array
    */
   public function payInquiry($chat_id, $ref_id) {
     $params = compact('chat_id', 'ref_id');
-    $result = $this->sendRequest(null, $params, 'payInquiry');
+    $result = $this->sendRequest(null, $params, 'payment/inquery');
     $result = json_decode($result, true);
     if (is_array($result)) {
-      return $result['status'] == 'verified';
+      return $result;
     }
   }
 
