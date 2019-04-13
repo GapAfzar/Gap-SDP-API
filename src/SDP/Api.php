@@ -364,11 +364,12 @@ class Api {
    * @param int             $chat_id
    * @param int             $amount
    * @param string          $description
+   * @param string          $currency
    *
    * @return string
    */
-  public function sendInvoice($chat_id, $amount, $description) {
-    $params = compact('chat_id', 'amount', 'description');
+  public function sendInvoice($chat_id, $amount, $description, $currency = 'IRR') {
+    $params = compact('chat_id', 'amount', 'description', 'currency');
     $result = $this->sendRequest(null, $params, 'invoice');
     $result = json_decode($result, true);
     return $result['id'];
