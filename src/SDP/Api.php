@@ -469,6 +469,78 @@ class Api {
     return json_encode($replyKeyboard);
   }
 
+  /**
+   * Get Game Data.
+   *
+   * @param int $chat_id
+   * @param string $type
+   *
+   * @return mixed
+   * @throws \Exception
+   */
+  public function getGameData($chat_id, $type) {
+    $types = array(
+      'setting',
+      'meta',
+      'custom',
+      'high_score'
+    );
+    if(!in_array($type, $types)){
+      throw new \Exception('Invalid Type! Accepted value: '.implode(', ', $types));
+    }
+    $params = compact('chat_id', 'type');
+    $result = $this->sendRequest(null, $params, 'getGameData');
+    return $result ? json_decode($result, true)['data'] : false;
+  }
+
+  /**
+   * Set Game Data.
+   *
+   * @param int $chat_id
+   * @param string $type
+   * @param string $data
+   *
+   * @return mixed
+   * @throws \Exception
+   */
+  public function setGameData($chat_id, $type, $data) {
+    $types = array(
+      'setting',
+      'meta',
+      'custom',
+      'high_score'
+    );
+    if(!in_array($type, $types)){
+      throw new \Exception('Invalid Type! Accepted value: '.implode(', ', $types));
+    }
+    $params = compact('chat_id', 'type', 'data');
+    return $this->sendRequest(null, $params, 'gameData');
+  }
+
+  /**
+   * Leader Board.
+   *
+   * @param int $chat_id
+   * @param string $type
+   *
+   * @return mixed
+   * @throws \Exception
+   */
+  public function leaderBoard($chat_id, $type = 'all') {
+    $types = array(
+      'all',
+      'month',
+      'week',
+      'day'
+    );
+    if(!in_array($type, $types)){
+      throw new \Exception('Invalid Type! Accepted value: '.implode(', ', $types));
+    }
+    $params = compact('chat_id', 'type');
+    $result = $this->sendRequest(null, $params, 'leaderBoard');
+    return $result ? json_decode($result, true) : false;
+  }
+
   private function sendRequest($msgType, $params, $method = 'sendMessage') {
     if ($msgType) {
       $params['type'] = $msgType;
