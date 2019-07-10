@@ -370,10 +370,39 @@ class Api {
    */
   public function sendInvoice($chat_id, $amount, $description, $currency = 'IRR') {
     $params = compact('chat_id', 'amount', 'description', 'currency');
-    $result = $this->sendRequest(null, $params, 'invoice');
+    $result = $this->sendRequest('text', $params, 'invoice');
     $result = json_decode($result, true);
     return $result['id'];
   }
+
+    /**
+   * Send Image Invoice.
+   *
+   * @param int             $chat_id
+   * @param int             $amount
+   * @param string          $description
+   * @param string          $currency
+   *
+   * @return string
+   */
+  public function sendImageInvoice($chat_id, $amount, $image, $description, $currency = 'IRR') {
+
+    $msgType = 'image';
+    if (!json_decode($image)) {
+      if (!is_file($image)) {
+        throw new \Exception("Image path is invalid");
+      }
+      list($msgType, $image) = $this->uploadFile('image', $image, $description);
+    }
+
+    $params = compact('chat_id', 'amount', 'currency');
+    $params['image'] = $image;
+    
+    $result = $this->sendRequest($msgType, $params, 'invoice');
+    $result = json_decode($result, true);
+    return $result['id'];
+  }
+
 
   /**
    * Invoice inquiry.
