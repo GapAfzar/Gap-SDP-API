@@ -416,7 +416,7 @@ class Api {
    */
   public function invoiceInquiry($chat_id, $ref_id) {
     $params = compact('chat_id', 'ref_id');
-    $result = $this->sendRequest(null, $params, 'invoice/inquery');
+    $result = $this->sendRequest(null, $params, 'invoice/inquiry');
     $result = json_decode($result, true);
     if (is_array($result)) {
       return $result;
@@ -463,7 +463,7 @@ class Api {
    */
   public function payInquiry($chat_id, $ref_id) {
     $params = compact('chat_id', 'ref_id');
-    $result = $this->sendRequest(null, $params, 'payment/inquery');
+    $result = $this->sendRequest(null, $params, 'payment/inquiry');
     $result = json_decode($result, true);
     if (is_array($result)) {
       return $result;
