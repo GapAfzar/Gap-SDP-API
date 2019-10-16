@@ -369,7 +369,7 @@ class Api {
    * @return string
    */
   public function sendInvoice($chat_id, $amount, $description, $expire_date='', $currency = 'IRR') {
-    $expire_date = (is_numeric($expire_date) && (int) $expire_date == $expire_date) ? $expire_date : '';
+    $expire_date = (is_numeric($expire_date) && (int) $expire_date == $expire_date && $expire_date >= 300 && $expire_date <= 604800) ? $expire_date : 86400;
     $params = compact('chat_id', 'amount', 'description', 'expire_date', 'currency');
     $result = $this->sendRequest('text', $params, 'invoice');
     $result = json_decode($result, true);
@@ -396,7 +396,7 @@ class Api {
       }
       list($msgType, $image) = $this->uploadFile('image', $image, $description);
     }
-    $expire_date = (is_numeric($expire_date) && (int) $expire_date == $expire_date) ? $expire_date : '';
+    $expire_date = (is_numeric($expire_date) && (int) $expire_date == $expire_date && $expire_date >= 300 && $expire_date <= 604800) ? $expire_date : 86400;
     $params = compact('chat_id', 'amount', 'currency', 'expire_date');
     $params['image'] = $image;
 
