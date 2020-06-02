@@ -584,7 +584,13 @@ class Api {
     curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
     curl_setopt($ch, CURLOPT_HTTPHEADER, array('token: ' . $this->token));
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    $decoded = json_decode(curl_exec($ch), true);
+    $uploaded = curl_exec($ch);
+    $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    curl_close($ch);
+    $decoded = json_decode($uploaded, true);
+    if ($httpcode != 200 || json_last_error()) {
+      throw new \Exception('upload an error was encountered');
+    }
     $decoded['desc'] = $desc;
     return [$decoded['type'], json_encode($decoded)];
   }
