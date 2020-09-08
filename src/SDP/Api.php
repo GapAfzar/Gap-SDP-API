@@ -567,7 +567,7 @@ class Api {
         $curl_result = json_decode($curl_result, true);
         throw new \Exception($curl_result['error']);
       }
-      throw new \Exception('an error was encountered');
+      throw new \Exception('an error was encountered', $httpcode);
     }
 
     return $curl_result;
@@ -589,7 +589,7 @@ class Api {
     curl_close($ch);
     $decoded = json_decode($uploaded, true);
     if ($httpcode != 200 || json_last_error()) {
-      throw new \Exception('upload an error was encountered');
+      throw new \Exception('upload an error was encountered', $httpcode);
     }
     $decoded['desc'] = $desc;
     return [$decoded['type'], json_encode($decoded)];
