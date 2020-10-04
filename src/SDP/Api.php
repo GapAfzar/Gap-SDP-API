@@ -368,12 +368,43 @@ class Api {
    *
    * @return string
    */
-  public function sendInvoice($chat_id, $amount, $description, $currency = 'IRR') {
-    $params = compact('chat_id', 'amount', 'description', 'currency');
-    $result = $this->sendRequest(null, $params, 'invoice');
+  public function sendInvoice($chat_id, $amount, $description, $expire_date='', $currency = 'IRR') {
+    $expire_date = (is_numeric($expire_date) && (int) $expire_date == $expire_date && $expire_date >= 300 && $expire_date <= 604800) ? $expire_date : 86400;
+    $params = compact('chat_id', 'amount', 'description', 'expire_date', 'currency');
+    $result = $this->sendRequest('text', $params, 'invoice');
     $result = json_decode($result, true);
     return $result['id'];
   }
+
+    /**
+   * Send Image Invoice.
+   *
+   * @param int             $chat_id
+   * @param int             $amount
+   * @param string          $image
+   * @param string          $description
+   * @param string          $currency
+   *
+   * @return string
+   */
+  public function sendImageInvoice($chat_id, $amount, $image, $description, $expire_date='', $currency = 'IRR') {
+
+    $msgType = 'image';
+    if (!json_decode($image)) {
+      if (!is_file($image)) {
+        throw new \Exception("Image path is invalid");
+      }
+      list($msgType, $image) = $this->uploadFile('image', $image, $description);
+    }
+    $expire_date = (is_numeric($expire_date) && (int) $expire_date == $expire_date && $expire_date >= 300 && $expire_date <= 604800) ? $expire_date : 86400;
+    $params = compact('chat_id', 'amount', 'currency', 'expire_date');
+    $params['image'] = $image;
+
+    $result = $this->sendRequest($msgType, $params, 'invoice');
+    $result = json_decode($result, true);
+    return $result['id'];
+  }
+
 
   /**
    * Invoice inquiry.
@@ -385,7 +416,7 @@ class Api {
    */
   public function invoiceInquiry($chat_id, $ref_id) {
     $params = compact('chat_id', 'ref_id');
-    $result = $this->sendRequest(null, $params, 'invoice/inquery');
+    $result = $this->sendRequest(null, $params, 'invoice/inquiry');
     $result = json_decode($result, true);
     if (is_array($result)) {
       return $result;
@@ -432,7 +463,7 @@ class Api {
    */
   public function payInquiry($chat_id, $ref_id) {
     $params = compact('chat_id', 'ref_id');
-    $result = $this->sendRequest(null, $params, 'payment/inquery');
+    $result = $this->sendRequest(null, $params, 'payment/inquiry');
     $result = json_decode($result, true);
     if (is_array($result)) {
       return $result;
