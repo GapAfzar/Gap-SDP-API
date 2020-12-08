@@ -510,15 +510,6 @@ class Api {
    * @throws \Exception
    */
   public function getGameData($chat_id, $type) {
-    $types = array(
-      'setting',
-      'meta',
-      'custom',
-      'high_score'
-    );
-    if(!in_array($type, $types)){
-      throw new \Exception('Invalid Type! Accepted value: '.implode(', ', $types));
-    }
     $params = compact('chat_id', 'type');
     $result = $this->sendRequest(null, $params, 'getGameData');
     return $result ? json_decode($result, true)['data'] : false;
@@ -530,22 +521,50 @@ class Api {
    * @param int $chat_id
    * @param string $type
    * @param string $data
+   * @param bool $force
    *
    * @return mixed
    * @throws \Exception
    */
-  public function setGameData($chat_id, $type, $data) {
-    $types = array(
-      'setting',
-      'meta',
-      'custom',
-      'high_score'
-    );
-    if(!in_array($type, $types)){
-      throw new \Exception('Invalid Type! Accepted value: '.implode(', ', $types));
-    }
-    $params = compact('chat_id', 'type', 'data');
+  public function setGameData($chat_id, $type, $data, $force = false) {
+    $params = compact('chat_id', 'type', 'data', 'force');
     return $this->sendRequest(null, $params, 'gameData');
+  }
+
+  /**
+   * Get Game Config.
+   *
+   * @param int $chat_id
+   * @param string $key
+   *
+   * @return mixed
+   * @throws \Exception
+   */
+  public function getGameConfig($chat_id, $key = null){
+    $params = compact('chat_id', 'key');
+    $result = $this->sendRequest(null, $params, 'getGameConfig');
+    return $result ? json_decode($result, true)['configs'] : false;
+  }
+
+  /**
+   * Game Event.
+   *
+   * @param int $chat_id
+   * @param string $event
+   * @param string $value
+   *
+   * @return mixed
+   * @throws \Exception
+   */
+  public function gameEvent($chat_id, $event, $value){
+    if (empty($event)) {
+      throw new \Exception('Event required!');
+    }
+    if (empty($value)) {
+      throw new \Exception('Value required!');
+    }
+    $params = compact('chat_id', 'event', 'value');
+    return $this->sendRequest(null, $params, 'gameEvent');
   }
 
   /**
