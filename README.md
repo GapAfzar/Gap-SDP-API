@@ -15,9 +15,7 @@ You will find everything you need to know to use this API in the [wiki](https://
 ## Installation
 
 ```sh
-$ git clone git@github.com:GapAfzar/Gap-SDP-API.git
-$ cd Gap-SDP-API/
-$ composer dumpautoload
+$ composer require gapafzar/gap-sdp-api   
 ```
 
 ### What is Gap?
